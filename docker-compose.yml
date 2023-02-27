@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  app:
+    image: 'my-veterinary-ms'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/veterinary_db
+      - SPRING_DATASOURCE_USERNAME=$${datasource.username}
+      - SPRING_DATASOURCE_PASSWORD=$${datasource.password}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  server:
+    image: 'config-server'
+    build:
+      context: .
+    container_name: server
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/veterinary_db
+      - SPRING_DATASOURCE_USERNAME=$${datasource.username}
+      - SPRING_DATASOURCE_PASSWORD=$${datasource.password}
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: db
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=$${datasource.username}
+      - POSTGRES_PASSWORD=$${datasource.password}

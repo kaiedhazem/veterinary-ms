@@ -19,7 +19,7 @@ import java.util.Date;
 public class Treatment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Float price;
     private Date date;
